@@ -4,7 +4,7 @@ import { ArrowLeft, X, AlertTriangle } from 'lucide-react'
 import api from '../api/client'
 import { getApiError } from '../api/helpers'
 import { useConfirm } from '../context/ConfirmContext'
-import { formatMoney } from '../utils/format'
+import { formatDateLong, formatMoney } from '../utils/format'
 
 export default function ClienteForm() {
   const { confirm } = useConfirm()
@@ -201,7 +201,7 @@ export default function ClienteForm() {
               <h3 className="pf-h3">Histórico de fiado</h3>
               {cliente.historico_fiado.map((h) => (
                 <div key={h.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border)', fontSize: 14 }}>
-                  <span>{new Date(h.criado_em).toLocaleDateString('pt-BR')} · {h.descricao}</span>
+                  <span>{formatDateLong(h.criado_em)} · {h.descricao}</span>
                   <span>
                     <span className="mono">{formatMoney(h.total)}</span>{' '}
                     <span className={`pf-pill ${h.status_label === 'pago' ? 'success' : 'danger'}`}>{h.status_label}</span>

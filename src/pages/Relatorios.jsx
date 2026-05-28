@@ -2,19 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { Download, Printer } from 'lucide-react'
 import api from '../api/client'
 import { extractList, getApiError } from '../api/helpers'
-import { formatMoney } from '../utils/format'
+import { formatDateTime, formatIsoDateBr, formatMoney } from '../utils/format'
 import { downloadCsv, fileTimestamp } from '../utils/export'
 
 const TAB_LABELS = {
   vendas: 'Vendas',
   inadimplencia: 'Inadimplência',
   estoque: 'Estoque',
-}
-
-function formatDateBr(iso) {
-  if (!iso) return ''
-  const [y, m, d] = iso.split('-')
-  return `${d}/${m}/${y}`
 }
 
 export default function Relatorios() {
@@ -80,12 +74,12 @@ export default function Relatorios() {
     if (tab === 'vendas') {
       const ini = filtros.data_inicio || data?.periodo?.inicio
       const fim = filtros.data_fim || data?.periodo?.fim
-      if (ini && fim) return `${formatDateBr(ini)} a ${formatDateBr(fim)}`
-      if (ini) return `A partir de ${formatDateBr(ini)}`
-      if (fim) return `Até ${formatDateBr(fim)}`
+      if (ini && fim) return `${formatIsoDateBr(ini)} a ${formatIsoDateBr(fim)}`
+      if (ini) return `A partir de ${formatIsoDateBr(ini)}`
+      if (fim) return `Até ${formatIsoDateBr(fim)}`
       return 'Período padrão (últimos 7 dias)'
     }
-    return new Date().toLocaleDateString('pt-BR')
+    return formatDateTime(new Date())
   }
 
   const buildCsvRows = () => {
@@ -94,7 +88,7 @@ export default function Relatorios() {
       if (!data) return null
       const rows = [
         ['Relatório', 'Vendas'],
-        ['Gerado em', new Date().toLocaleString('pt-BR')],
+        ['Gerado em', formatDateTime(new Date())],
         ['Período', periodoLabel()],
         ['Total de vendas', data.total_vendas_periodo],
         [],
@@ -125,7 +119,7 @@ export default function Relatorios() {
     if (tab === 'inadimplencia') {
       const rows = [
         ['Relatório', 'Inadimplência'],
-        ['Gerado em', new Date().toLocaleString('pt-BR')],
+        ['Gerado em', formatDateTime(new Date())],
         [],
         ['Cliente', 'Venda', 'Total', 'Compra', 'Última notificação'],
       ]
@@ -144,7 +138,7 @@ export default function Relatorios() {
     if (tab === 'estoque') {
       const rows = [
         ['Relatório', 'Estoque'],
-        ['Gerado em', new Date().toLocaleString('pt-BR')],
+        ['Gerado em', formatDateTime(new Date())],
         [],
         ['Produto', 'Categoria', 'Disponível', 'Mínimo', 'Unidade', 'Status'],
       ]
@@ -229,7 +223,7 @@ export default function Relatorios() {
         <div className="relatorio-print-header print-only">
           <h1>Relatórios — {TAB_LABELS[tab]}</h1>
           <p>{periodoLabel()}</p>
-          <p>Impresso em {new Date().toLocaleString('pt-BR')}</p>
+          <p>Impresso em {formatDateTime(new Date())}</p>
         </div>
 
       {tab === 'vendas' && (

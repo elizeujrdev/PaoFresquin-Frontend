@@ -1,3 +1,14 @@
+import { formatDate, formatDateTime, hourInBrazil } from './datetime'
+
+export {
+  formatDate,
+  formatDateLong,
+  formatDateTime,
+  formatIsoDateBr,
+  formatTime,
+  todayIsoInBrazil,
+} from './datetime'
+
 /** Converte "0,75" ou "1.234,56" para número (API Django). */
 export function parseDecimal(value) {
   if (value === '' || value == null) return null
@@ -17,12 +28,6 @@ export function formatMoney(value) {
   return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
 
-export function formatDate(d) {
-  if (!d) return ''
-  const date = new Date(d)
-  return date.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' })
-}
-
 export function formatQty(qty, unidade) {
   const n = Number(qty)
   if (unidade === 'PESO') return `${n.toLocaleString('pt-BR', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} kg`
@@ -30,7 +35,7 @@ export function formatQty(qty, unidade) {
 }
 
 export function greetingName(name) {
-  const h = new Date().getHours()
+  const h = hourInBrazil()
   const g = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'
   const first = name?.split(' ')[0] || ''
   return `${g}, ${first}.`

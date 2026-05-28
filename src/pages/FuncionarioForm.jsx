@@ -4,6 +4,7 @@ import { ArrowLeft, Trash2, X, Check, Clock, Paperclip } from 'lucide-react'
 import api from '../api/client'
 import { getApiError } from '../api/helpers'
 import { useConfirm } from '../context/ConfirmContext'
+import { todayIsoInBrazil } from '../utils/format'
 
 const emptyForm = {
   nome: '',
@@ -11,7 +12,7 @@ const emptyForm = {
   telefone: '',
   endereco: '',
   contato_emergencia: '',
-  data_admissao: new Date().toISOString().slice(0, 10),
+  data_admissao: todayIsoInBrazil(),
 }
 
 export default function FuncionarioForm() {
@@ -127,7 +128,7 @@ export default function FuncionarioForm() {
   if (loading) return <p>Carregando…</p>
 
   const anos = f?.data_admissao
-    ? new Date().getFullYear() - new Date(f.data_admissao).getFullYear()
+    ? Number(todayIsoInBrazil().slice(0, 4)) - Number(String(f.data_admissao).slice(0, 4))
     : 0
 
   return (
