@@ -130,6 +130,18 @@ a { color: inherit; text-decoration: none; }
   z-index: 90;
 }
 
+.pf-mobile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.pf-mobile-header-actions .pf-btn {
+  padding: 8px 10px;
+  min-height: 40px;
+}
+
 @media (max-width: 768px) {
   .pf-mobile-header {
     display: flex;
@@ -180,12 +192,12 @@ a { color: inherit; text-decoration: none; }
     align-items: stretch;
   }
 
-  .page-header-actions {
+  .page-header .page-header-actions {
     flex-direction: column;
     width: 100%;
   }
 
-  .page-header-actions .pf-btn {
+  .page-header .page-header-actions .pf-btn {
     width: 100%;
     justify-content: center;
   }
