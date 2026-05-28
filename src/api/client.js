@@ -1,12 +1,7 @@
 import axios from 'axios'
 
-const envBase =
-  import.meta.env.VITE_API_BASE ||
-  import.meta.env.API_BASE ||
-  ''
-
 const api = axios.create({
-  baseURL: envBase || '/api',
+  baseURL: 'https://pao-fresquin-backend.vercel.app/api',
   headers: { 'Content-Type': 'application/json' },
 })
 
