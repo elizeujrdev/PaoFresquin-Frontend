@@ -1,0 +1,454 @@
+/* Acessibilidade — escala, contraste, modais, skip link */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pf-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 10000;
+  padding: 12px 20px;
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 600;
+  border-radius: 0 0 var(--radius-sm) 0;
+  text-decoration: none;
+}
+
+.pf-skip-link:focus {
+  left: 0;
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Escala de fonte — px fixos nos componentes não herdam do .pf; escalamos o app inteiro */
+html {
+  --pf-font-scale: 1;
+}
+
+html[data-font-scale] #root {
+  zoom: var(--pf-font-scale);
+}
+
+/* Firefox e navegadores sem zoom: escala via rem na raiz + componentes principais */
+@supports not (zoom: 1) {
+  html[data-font-scale="85"] { font-size: 13.6px; }
+  html[data-font-scale="100"] { font-size: 16px; }
+  html[data-font-scale="115"] { font-size: 18.4px; }
+  html[data-font-scale="130"] { font-size: 20.8px; }
+
+  html[data-font-scale] #root {
+    zoom: unset;
+  }
+
+  html[data-font-scale] .pf .pf-label { font-size: 0.8125rem; }
+  html[data-font-scale] .pf .pf-input,
+  html[data-font-scale] .pf .pf-select,
+  html[data-font-scale] .pf .pf-textarea { font-size: 1rem; }
+  html[data-font-scale] .pf .pf-btn { font-size: 0.9375rem; }
+  html[data-font-scale] .pf .pf-h1 { font-size: 1.625rem; }
+  html[data-font-scale] .pf .pf-h2 { font-size: 1.125rem; }
+  html[data-font-scale] .pf .pf-h3 { font-size: 0.9375rem; }
+  html[data-font-scale] .pf .pf-table { font-size: 0.9375rem; }
+  html[data-font-scale] .pf .pf-nav-item { font-size: 0.9375rem; }
+  html[data-font-scale] .pf .pf-pill { font-size: 0.8125rem; }
+}
+
+html[data-high-contrast] {
+  --bg: #ffffff;
+  --bg-soft: #f0f0f0;
+  --surface: #ffffff;
+  --ink: #000000;
+  --ink-2: #1a1a1a;
+  --muted: #333333;
+  --muted-2: #555555;
+  --border: #000000;
+  --border-2: #333333;
+  --accent: #8a4f00;
+  --accent-soft: #ffe8b8;
+  --accent-ink: #4a2800;
+  --danger: #8b0000;
+  --danger-soft: #ffdddd;
+  --success: #004d00;
+  --success-soft: #d4ffd4;
+}
+
+html[data-high-contrast] .pf-btn:focus-visible,
+html[data-high-contrast] .pf-input:focus-visible,
+html[data-high-contrast] .pf-select:focus-visible,
+html[data-high-contrast] a:focus-visible {
+  outline: 3px solid #000;
+  outline-offset: 2px;
+}
+
+html[data-reduced-motion] *,
+html[data-reduced-motion] *::before,
+html[data-reduced-motion] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+html[data-large-targets] .pf-btn {
+  min-height: 44px;
+  padding: 12px 20px;
+}
+
+html[data-large-targets] .pf-nav-item {
+  min-height: 44px;
+  padding: 10px 14px;
+}
+
+html[data-large-targets] .pf-mobile-nav-item {
+  min-height: 52px;
+}
+
+/* Daltonismo — paleta segura (Wong / Okabe–Ito) + símbolos nos status */
+
+html[data-color-blind="deuteranopia"],
+html[data-color-blind="protanopia"] {
+  --danger: #0173b2;
+  --danger-soft: #cce5f5;
+  --success: #de8f05;
+  --success-soft: #fff3d6;
+  --accent: #cc78b7;
+  --accent-soft: #f5e0ef;
+  --accent-ink: #6b3d5c;
+}
+
+html[data-color-blind="tritanopia"] {
+  --danger: #d55e00;
+  --danger-soft: #ffe8d6;
+  --success: #009e73;
+  --success-soft: #d6f5ec;
+  --accent: #56b4e9;
+  --accent-soft: #dceefb;
+  --accent-ink: #1a4d6e;
+}
+
+html[data-color-blind] .pf-pill.danger,
+html[data-color-blind] .pf-pill.success {
+  border: 2px solid currentColor;
+  font-weight: 600;
+}
+
+html[data-color-blind] .pf-pill.danger::before {
+  content: "✕ ";
+  font-weight: 700;
+}
+
+html[data-color-blind] .pf-pill.success::before {
+  content: "✓ ";
+  font-weight: 700;
+}
+
+html[data-color-blind] .alert-box {
+  border-left: 4px solid var(--danger);
+}
+
+html[data-color-blind] .serasa-banner {
+  border: 2px solid var(--danger);
+}
+
+html[data-color-blind] .pf-btn-danger {
+  border-width: 2px;
+  border-color: var(--danger);
+}
+
+html[data-color-blind] .pf-table tbody tr:has(.pf-pill.danger) {
+  box-shadow: inset 3px 0 0 var(--danger);
+}
+
+.pf-a11y-hint {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.pf-a11y-cb-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pf-a11y-cb-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.pf-a11y-cb-option.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.pf-a11y-cb-option input {
+  margin-top: 3px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.pf-a11y-cb-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--bg-soft);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border);
+}
+
+.pf-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  background: rgba(26, 22, 20, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.pf-modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 48px rgba(26, 22, 20, 0.18);
+  max-width: 100%;
+  width: 440px;
+  padding: 28px;
+}
+
+.pf-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pf-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.pf-confirm-dialog {
+  text-align: center;
+}
+
+.pf-confirm-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+html[data-high-contrast] .pf-confirm-dialog .pf-confirm-icon {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.pf-confirm-dialog.danger .pf-confirm-icon {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.pf-confirm-title {
+  margin: 0 0 8px;
+}
+
+.pf-confirm-message {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.pf-a11y-panel {
+  width: min(520px, 100%);
+  max-height: min(90vh, 720px);
+  overflow-y: auto;
+}
+
+.pf-a11y-intro {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.pf-a11y-section {
+  margin-bottom: 24px;
+}
+
+.pf-a11y-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pf-a11y-font-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.pf-a11y-font-value {
+  font-size: 20px;
+  font-weight: 600;
+  min-width: 64px;
+  text-align: center;
+}
+
+.pf-a11y-font-steps {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pf-a11y-step {
+  flex: 1;
+  min-width: 72px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.pf-a11y-step.active,
+.pf-a11y-step[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+.pf-a11y-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  cursor: pointer;
+  font-size: 15px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pf-a11y-toggle:last-child {
+  border-bottom: none;
+}
+
+.pf-a11y-toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
+
+.pf-shortcuts-panel {
+  width: min(520px, 100%);
+}
+
+.pf-shortcuts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.pf-shortcuts-table th {
+  text-align: left;
+  padding: 10px 12px 10px 0;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.pf-shortcuts-table td {
+  padding: 10px 0;
+  color: var(--ink-2);
+}
+
+.pf-kbd-group {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.pf-kbd,
+kbd.pf-kbd {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-2);
+  background: var(--bg-soft);
+  color: var(--ink);
+  box-shadow: 0 1px 0 var(--border);
+}
+
+.pf-a11y-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 90;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(26, 22, 20, 0.12);
+}
+
+.pf-a11y-fab:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .pf-a11y-fab {
+    bottom: 96px;
+    right: 16px;
+  }
+}
+
+.pf-login-a11y {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+}
