@@ -125,7 +125,7 @@ export default function ProdutoForm() {
       <Link to="/produtos" className="pf-btn pf-btn-ghost" style={{ marginBottom: 8 }}><ArrowLeft size={16} /> Voltar</Link>
       <div className="page-header">
         <h1 className="pf-h1">{isNew ? 'Cadastro de produto' : form.nome}</h1>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div className="page-header-actions">
           {!isNew && (
             <button type="button" className="pf-btn pf-btn-danger" onClick={excluir} disabled={saving}>
               <Trash2 size={16} /> Excluir
@@ -145,7 +145,7 @@ export default function ProdutoForm() {
             <label className="pf-label">Nome do produto</label>
             <input className="pf-input pf-input-lg" value={form.nome} onChange={(e) => set('nome', e.target.value)} />
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="form-grid-2">
             <div className="pf-field">
               <label className="pf-label">Código de barras</label>
               <div style={{ position: 'relative' }}>
@@ -161,7 +161,7 @@ export default function ProdutoForm() {
               </select>
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="form-grid-2">
             <div className="pf-field">
               <label className="pf-label">Preço unitário</label>
               <input className="pf-input mono" value={form.preco_venda} onChange={(e) => set('preco_venda', e.target.value)} />

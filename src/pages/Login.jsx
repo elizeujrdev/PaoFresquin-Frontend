@@ -33,7 +33,7 @@ export default function Login() {
   }
 
   return (
-    <div className="pf" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+    <div className="pf" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px 16px' }}>
       <button
         type="button"
         className="pf-btn pf-btn-ghost pf-login-a11y"

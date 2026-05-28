@@ -29,6 +29,7 @@ export default function Clientes() {
       </div>
       {error && <p style={{ color: 'var(--danger)' }}>{error}</p>}
       <div className="pf-card">
+        <div className="table-scroll">
         <table className="pf-table">
           <thead>
             <tr><th>Nome</th><th>CPF</th><th>Fiado em aberto</th><th>Serasa</th><th></th></tr>
@@ -49,6 +50,7 @@ export default function Clientes() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </>
   )

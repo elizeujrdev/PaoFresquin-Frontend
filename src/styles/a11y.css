@@ -224,7 +224,8 @@ html[data-color-blind] .pf-table tbody tr:has(.pf-pill.danger) {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 16px;
+  overflow-y: auto;
 }
 
 .pf-modal {

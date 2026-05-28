@@ -290,7 +290,7 @@ export default function Pdv() {
 
   if (concluida) {
     return (
-      <div className="pf-card" style={{ padding: 40, maxWidth: 520, margin: '40px auto', textAlign: 'center' }}>
+      <div className="pf-card" style={{ padding: '32px 20px', maxWidth: 520, margin: '24px auto', textAlign: 'center', width: '100%' }}>
         <CheckCircle2 size={48} style={{ color: 'var(--success)', marginBottom: 16 }} />
         <h1 className="pf-h1">Venda #{concluida.numero} registrada</h1>
         <p className="mono" style={{ fontSize: 28, margin: '16px 0 24px' }}>{formatMoney(concluida.total)}</p>
@@ -319,20 +319,22 @@ export default function Pdv() {
             {itens.length} itens · {user?.nome || 'Atendente'}
           </p>
         </div>
-        <button type="button" className="pf-btn pf-btn-ghost" onClick={cancelar}>
-          <X size={16} /> Cancelar venda
-        </button>
+        <div className="page-header-actions">
+          <button type="button" className="pf-btn pf-btn-ghost" onClick={cancelar}>
+            <X size={16} /> Cancelar venda
+          </button>
+        </div>
       </div>
 
       <div className="pdv-layout">
         <div className="pf-card" style={{ padding: 24 }}>
-          <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-            <div style={{ flex: 1, position: 'relative' }}>
+          <div className="pdv-toolbar">
+            <div className="pdv-toolbar-input">
               <Barcode size={18} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)' }} />
               <input
                 ref={inputRef}
                 className="pf-input pf-input-lg"
-                style={{ paddingLeft: 40 }}
+                style={{ paddingLeft: 40, width: '100%' }}
                 placeholder="Código de barras ou nome do produto..."
                 value={barcode}
                 onChange={(e) => {
@@ -348,12 +350,14 @@ export default function Pdv() {
                 }}
               />
             </div>
-            <button type="button" className="pf-btn pf-btn-ghost" onClick={() => addProduto(barcode)}>
-              <Search size={16} /> Buscar
-            </button>
-            <button type="button" className="pf-btn pf-btn-ghost" onClick={() => setShowPicker((v) => !v)} title="Ver catálogo">
-              <Plus size={16} /> Catálogo
-            </button>
+            <div className="pdv-toolbar-actions">
+              <button type="button" className="pf-btn pf-btn-ghost" onClick={() => addProduto(barcode)}>
+                <Search size={16} /> Buscar
+              </button>
+              <button type="button" className="pf-btn pf-btn-ghost" onClick={() => setShowPicker((v) => !v)} title="Ver catálogo">
+                <Plus size={16} /> Catálogo
+              </button>
+            </div>
           </div>
 
           {showPicker && sugestoes.length > 0 && (
@@ -406,6 +410,7 @@ export default function Pdv() {
               Escaneie o código, digite o nome ou escolha no catálogo.
             </p>
           ) : (
+            <div className="table-scroll">
             <table className="pf-table">
               <thead>
                 <tr>
@@ -452,10 +457,11 @@ export default function Pdv() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </div>
 
-        <div className="pf-card" style={{ padding: 24, position: 'sticky', top: 24 }}>
+        <div className="pf-card pdv-sidebar" style={{ padding: 24 }}>
           <h2 className="pf-h2" style={{ marginBottom: 16 }}>Total da venda</h2>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 15 }}>
             <span>Itens ({itens.length})</span>

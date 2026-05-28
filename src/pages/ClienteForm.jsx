@@ -138,7 +138,7 @@ export default function ClienteForm() {
             </p>
           )}
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div className="page-header-actions">
           <Link to="/clientes" className="pf-btn pf-btn-ghost"><X size={16} /> Cancelar</Link>
           <button type="button" className="pf-btn pf-btn-accent" data-pf-save onClick={confirmSave} disabled={saving || bloqueadoNovo}>
             {bloqueadoNovo ? 'Salvamento bloqueado' : saving ? 'Salvando…' : 'Salvar cliente'}

@@ -200,7 +200,7 @@ export default function Relatorios() {
             </p>
           )}
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div className="page-header-actions">
           <button type="button" className="pf-btn pf-btn-ghost" onClick={handleExportCsv}>
             <Download size={16} /> Exportar CSV
           </button>
@@ -234,7 +234,7 @@ export default function Relatorios() {
 
       {tab === 'vendas' && (
         <>
-          <div className="no-print" style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
+          <div className="no-print relatorio-filtros">
             <input
               className="pf-input"
               type="date"
@@ -264,7 +264,7 @@ export default function Relatorios() {
 
           {data && (
             <>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
+              <div className="stats-grid">
                 <div className="pf-card" style={{ padding: 20 }}>
                   <p className="pf-label">Total vendido</p>
                   <p className="mono" style={{ fontSize: 24, fontWeight: 500, margin: '8px 0' }}>{formatMoney(data.total_vendido)}</p>
@@ -337,48 +337,52 @@ export default function Relatorios() {
           {inadimplencia.length === 0 ? (
             <p style={{ color: 'var(--muted)' }}>Nenhum fiado em aberto no momento.</p>
           ) : (
-            <table className="pf-table">
-              <thead>
-                <tr><th>Cliente</th><th>Venda</th><th>Total</th><th>Compra</th><th>Última notif.</th></tr>
-              </thead>
-              <tbody>
-                {inadimplencia.map((row) => (
-                  <tr key={row.venda_id}>
-                    <td>{row.cliente}</td>
-                    <td>#{row.numero}</td>
-                    <td className="mono">{formatMoney(row.total)}</td>
-                    <td>{row.data_compra}</td>
-                    <td>{row.ultima_notificacao || '—'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="table-scroll">
+              <table className="pf-table">
+                <thead>
+                  <tr><th>Cliente</th><th>Venda</th><th>Total</th><th>Compra</th><th>Última notif.</th></tr>
+                </thead>
+                <tbody>
+                  {inadimplencia.map((row) => (
+                    <tr key={row.venda_id}>
+                      <td>{row.cliente}</td>
+                      <td>#{row.numero}</td>
+                      <td className="mono">{formatMoney(row.total)}</td>
+                      <td>{row.data_compra}</td>
+                      <td>{row.ultima_notificacao || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       )}
 
       {tab === 'estoque' && (
         <div className="pf-card" style={{ padding: 24 }}>
-          <table className="pf-table">
-            <thead>
-              <tr><th>Produto</th><th>Categoria</th><th>Disponível</th><th>Mínimo</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              {estoque.map((p) => (
-                <tr key={p.id}>
-                  <td>{p.nome}</td>
-                  <td>{p.categoria}</td>
-                  <td className="mono">{p.estoque_atual} {p.unidade === 'PESO' ? 'kg' : 'un'}</td>
-                  <td className="mono">{p.estoque_minimo}</td>
-                  <td>
-                    {p.estoque_baixo
-                      ? <span className="pf-pill danger">Baixo</span>
-                      : <span className="pf-pill success">OK</span>}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="table-scroll">
+            <table className="pf-table">
+              <thead>
+                <tr><th>Produto</th><th>Categoria</th><th>Disponível</th><th>Mínimo</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                {estoque.map((p) => (
+                  <tr key={p.id}>
+                    <td>{p.nome}</td>
+                    <td>{p.categoria}</td>
+                    <td className="mono">{p.estoque_atual} {p.unidade === 'PESO' ? 'kg' : 'un'}</td>
+                    <td className="mono">{p.estoque_minimo}</td>
+                    <td>
+                      {p.estoque_baixo
+                        ? <span className="pf-pill danger">Baixo</span>
+                        : <span className="pf-pill success">OK</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
       </div>

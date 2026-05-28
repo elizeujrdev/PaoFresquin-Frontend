@@ -18,13 +18,13 @@ export default function Cameras() {
             {data?.total ?? 2} câmeras conectadas · qualidade HD 1080p
           </p>
         </span>
-        <span style={{ display: 'flex', gap: 8 }}>
+        <div className="page-header-actions">
           <span className="pf-pill success"><span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--success)' }} /> Sistema ativo</span>
           <button type="button" className="pf-btn pf-btn-ghost"><Maximize2 size={16} /> Tela cheia</button>
-        </span>
+        </div>
       </div>
 
-      <span style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
+      <div className="cameras-grid">
         {data?.cameras?.map((cam) => (
           <span key={cam.id} className="pf-card" style={{ overflow: 'hidden' }}>
             <span className="camera-feed">
@@ -45,7 +45,7 @@ export default function Cameras() {
             </span>
           </span>
         ))}
-      </span>
+      </div>
 
       <p style={{ marginTop: 24, fontSize: 13, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 8 }}>
         <Lock size={14} />

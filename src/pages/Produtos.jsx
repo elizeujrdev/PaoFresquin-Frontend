@@ -28,7 +28,8 @@ export default function Produtos() {
         <Link to="/produtos/novo" className="pf-btn pf-btn-accent"><Plus size={16} /> Novo produto</Link>
       </div>
       {error && <p style={{ color: 'var(--danger)' }}>{error}</p>}
-      <div className="pf-card" style={{ overflow: 'hidden' }}>
+      <div className="pf-card">
+        <div className="table-scroll">
         <table className="pf-table">
           <thead>
             <tr>
@@ -56,6 +57,7 @@ export default function Produtos() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </>
   )

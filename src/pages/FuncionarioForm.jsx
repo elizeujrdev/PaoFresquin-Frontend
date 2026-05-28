@@ -156,7 +156,7 @@ export default function FuncionarioForm() {
             )}
           </div>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div className="page-header-actions">
           {!isNew && (
             <button type="button" className="pf-btn pf-btn-danger" onClick={desligar}>
               <Trash2 size={16} /> Desligar
@@ -206,7 +206,8 @@ export default function FuncionarioForm() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div className="pf-card" style={{ padding: 20 }}>
               <h2 className="pf-h2">Registros de ponto</h2>
-              <table className="pf-table" style={{ marginTop: 12 }}>
+              <div className="table-scroll" style={{ marginTop: 12 }}>
+              <table className="pf-table">
                 <thead>
                   <tr><th>Dia</th><th>Entrada</th><th>Saída</th><th>Total</th></tr>
                 </thead>
@@ -221,6 +222,7 @@ export default function FuncionarioForm() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
 
             <div className="pf-card" style={{ padding: 20 }}>
@@ -235,7 +237,7 @@ export default function FuncionarioForm() {
               ))}
               <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <input className="pf-input" placeholder="Título" value={ausencia.titulo} onChange={(e) => setAusencia({ ...ausencia, titulo: e.target.value })} />
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div className="form-grid-2" style={{ gap: 8 }}>
                   <input className="pf-input" type="date" value={ausencia.data_inicio} onChange={(e) => setAusencia({ ...ausencia, data_inicio: e.target.value })} />
                   <input className="pf-input" type="date" value={ausencia.data_fim} onChange={(e) => setAusencia({ ...ausencia, data_fim: e.target.value })} />
                 </div>

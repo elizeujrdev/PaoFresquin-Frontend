@@ -18,7 +18,18 @@ export default function Layout() {
       </a>
       <header className="pf-mobile-header mobile-only">
         <Wordmark />
-        <UserMenu />
+        <div className="page-header-actions" style={{ margin: 0 }}>
+          <button
+            type="button"
+            className="pf-btn pf-btn-ghost"
+            style={{ padding: '8px 10px' }}
+            onClick={() => setPanelOpen(true)}
+            aria-label="Abrir configurações de acessibilidade"
+          >
+            <Accessibility size={20} strokeWidth={1.5} />
+          </button>
+          <UserMenu />
+        </div>
       </header>
       <TopBar />
       <main id="conteudo-principal" className="app-main" tabIndex={-1}>

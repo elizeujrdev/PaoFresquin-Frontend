@@ -100,13 +100,10 @@ export default function Dashboard() {
           </div>
           {vendas.length === 0 && <p style={{ color: 'var(--muted)' }}>Nenhuma venda registrada hoje.</p>}
           {vendas.map((v) => (
-            <div key={v.id} style={{
-              display: 'grid', gridTemplateColumns: '70px 60px 1fr 100px 100px',
-              padding: '10px 0', borderBottom: '1px solid var(--border)', fontSize: 14, alignItems: 'center',
-            }}>
+            <div key={v.id} className="sale-row">
               <span className="mono" style={{ color: 'var(--muted)' }}>#{v.numero}</span>
               <span className="mono" style={{ color: 'var(--muted)' }}>{v.hora}</span>
-              <span>{v.cliente_nome}</span>
+              <span className="sale-row-customer">{v.cliente_nome}</span>
               <span style={{ color: 'var(--muted)', fontSize: 13 }}>{PAY_LABELS[v.forma_pagamento] || v.forma_pagamento}</span>
               <span className="mono" style={{ textAlign: 'right', fontWeight: 500 }}>{formatMoney(v.total)}</span>
             </div>
@@ -115,6 +112,44 @@ export default function Dashboard() {
 
         <div className="pf-card" style={{ padding: 24 }}>
           <h2 className="pf-h2" style={{ marginBottom: 14 }}>Avisos</h2>
+          {avisos.length === 0 && <p style={{ color: 'var(--muted)', fontSize: 14 }}>Nenhum aviso no momento.</p>}
+          {avisos.map((a, i) => (
+            <div key={i} style={{
+              display: 'flex', gap: 10, padding: '12px 0',
+              borderBottom: i < avisos.length - 1 ? '1px solid var(--border)' : 'none',
+            }}>
+              <span style={{
+                width: 6, height: 6, borderRadius: '50%', marginTop: 7, flexShrink: 0,
+                background: a.tipo === 'danger' ? 'var(--danger)' : a.tipo === 'warning' ? 'var(--accent)' : 'var(--muted-2)',
+              }} />
+              <div style={{ fontSize: 14 }}>
+                <div>{a.titulo}</div>
+                {a.subtitulo && <div style={{ color: 'var(--muted)', fontSize: 13, marginTop: 2 }}>{a.subtitulo}</div>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid-2-1 mobile-only" style={{ marginTop: 16 }}>
+        <div className="pf-card" style={{ padding: 20 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+            <h2 className="pf-h2">Últimas vendas</h2>
+            <Link to="/relatorios" className="pf-btn pf-btn-ghost" style={{ padding: '6px 12px', fontSize: 13 }}>Ver todas</Link>
+          </div>
+          {vendas.length === 0 && <p style={{ color: 'var(--muted)', fontSize: 14 }}>Nenhuma venda registrada hoje.</p>}
+          {vendas.map((v) => (
+            <div key={v.id} className="sale-row">
+              <span className="mono" style={{ color: 'var(--muted)' }}>#{v.numero}</span>
+              <span className="mono" style={{ color: 'var(--muted)' }}>{v.hora}</span>
+              <span className="sale-row-customer">{v.cliente_nome}</span>
+              <span style={{ color: 'var(--muted)', fontSize: 13 }}>{PAY_LABELS[v.forma_pagamento] || v.forma_pagamento}</span>
+              <span className="mono" style={{ fontWeight: 500 }}>{formatMoney(v.total)}</span>
+            </div>
+          ))}
+        </div>
+        <div className="pf-card" style={{ padding: 20 }}>
+          <h2 className="pf-h2" style={{ marginBottom: 12 }}>Avisos</h2>
           {avisos.length === 0 && <p style={{ color: 'var(--muted)', fontSize: 14 }}>Nenhum aviso no momento.</p>}
           {avisos.map((a, i) => (
             <div key={i} style={{
