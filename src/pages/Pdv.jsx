@@ -22,6 +22,25 @@ function defaultQty(unidade) {
   return unidade === 'PESO' ? 0.42 : 1
 }
 
+function PdvQtyControls({ item, idx, updateQty, setQtyInput }) {
+  return (
+    <div className="pdv-qty-controls">
+      <button type="button" className="pf-btn pf-btn-ghost" style={{ padding: 4 }} onClick={() => updateQty(idx, -1)} aria-label="Menos">
+        <Minus size={14} />
+      </button>
+      <input
+        className="pf-input mono"
+        value={item.unidade === 'PESO' ? String(item.quantidade).replace('.', ',') : item.quantidade}
+        onChange={(e) => setQtyInput(idx, e.target.value)}
+        aria-label={`Quantidade de ${item.nome}`}
+      />
+      <button type="button" className="pf-btn pf-btn-ghost" style={{ padding: 4 }} onClick={() => updateQty(idx, 1)} aria-label="Mais">
+        <Plus size={14} />
+      </button>
+    </div>
+  )
+}
+
 export default function Pdv() {
   const { user } = useAuth()
   const { confirm } = useConfirm()
@@ -311,7 +330,7 @@ export default function Pdv() {
   }
 
   return (
-    <>
+    <div className={`pdv-page${itens.length ? ' pdv-has-items' : ''}`}>
       <div className="page-header">
         <div>
           <h1 className="pf-h1">Venda #{numeroVenda ?? '…'}</h1>
@@ -320,14 +339,14 @@ export default function Pdv() {
           </p>
         </div>
         <div className="page-header-actions">
-          <button type="button" className="pf-btn pf-btn-ghost" onClick={cancelar}>
-            <X size={16} /> Cancelar venda
+          <button type="button" className="pf-btn pf-btn-ghost" onClick={cancelar} aria-label="Cancelar venda">
+            <X size={16} /> <span className="pdv-cancel-label">Cancelar venda</span>
           </button>
         </div>
       </div>
 
       <div className="pdv-layout">
-        <div className="pf-card" style={{ padding: 24 }}>
+        <div className="pf-card pdv-card pdv-main">
           <div className="pdv-toolbar">
             <div className="pdv-toolbar-input">
               <Barcode size={18} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)' }} />
@@ -361,43 +380,23 @@ export default function Pdv() {
           </div>
 
           {showPicker && sugestoes.length > 0 && (
-            <div
-              className="pf-card"
-              style={{
-                marginBottom: 16,
-                padding: 8,
-                maxHeight: 220,
-                overflowY: 'auto',
-                border: '1px solid var(--border)',
-              }}
-            >
+            <div className="pf-card pdv-picker">
               {sugestoes.map((p) => (
                 <button
                   key={p.id}
                   type="button"
+                  className="pdv-picker-item"
                   onClick={() => appendProduto(p)}
-                  style={{
-                    display: 'flex',
-                    width: '100%',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '10px 12px',
-                    border: 'none',
-                    background: 'transparent',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    borderRadius: 6,
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg)' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
                 >
-                  <span>
+                  <span className="pdv-picker-item-info">
                     <strong>{p.nome}</strong>
-                    <span style={{ display: 'block', fontSize: 12, color: 'var(--muted)' }}>
+                    <span className="pdv-picker-item-meta">
                       {p.codigo_barras} · est. {formatQty(p.estoque_atual, p.unidade)}
                     </span>
                   </span>
-                  <span className="mono">{formatMoney(p.preco_venda)}{p.unidade === 'PESO' ? '/kg' : ''}</span>
+                  <span className="mono pdv-picker-item-price">
+                    {formatMoney(p.preco_venda)}{p.unidade === 'PESO' ? '/kg' : ''}
+                  </span>
                 </button>
               ))}
             </div>
@@ -410,58 +409,74 @@ export default function Pdv() {
               Escaneie o código, digite o nome ou escolha no catálogo.
             </p>
           ) : (
-            <div className="table-scroll">
-            <table className="pf-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Produto</th>
-                  <th>Qtd</th>
-                  <th>Unitário</th>
-                  <th>Subtotal</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
+            <>
+              <div className="pdv-items-mobile">
                 {itens.map((item, idx) => (
-                  <tr key={`${item.produto_id}-${idx}`}>
-                    <td>{idx + 1}</td>
-                    <td>{item.nome}</td>
-                    <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <button type="button" className="pf-btn pf-btn-ghost" style={{ padding: 4 }} onClick={() => updateQty(idx, -1)} aria-label="Menos">
-                          <Minus size={14} />
-                        </button>
-                        <input
-                          className="pf-input mono"
-                          style={{ width: 72, padding: '4px 6px', textAlign: 'center' }}
-                          value={item.unidade === 'PESO' ? String(item.quantidade).replace('.', ',') : item.quantidade}
-                          onChange={(e) => setQtyInput(idx, e.target.value)}
-                        />
-                        <button type="button" className="pf-btn pf-btn-ghost" style={{ padding: 4 }} onClick={() => updateQty(idx, 1)} aria-label="Mais">
-                          <Plus size={14} />
+                  <div className="pdv-item-row" key={`${item.produto_id}-${idx}`}>
+                    <div className="pdv-item-row-top">
+                      <span className="pdv-item-name">{item.nome}</span>
+                      <span className="pdv-item-total mono">{formatMoney(item.subtotal)}</span>
+                    </div>
+                    <div className="pdv-item-row-bottom">
+                      <span className="pdv-item-meta mono">
+                        {formatQty(item.quantidade, item.unidade)} × {formatMoney(item.preco_unitario)}
+                        {item.unidade === 'PESO' ? '/kg' : ''}
+                      </span>
+                      <div className="pdv-item-actions">
+                        <PdvQtyControls item={item} idx={idx} updateQty={updateQty} setQtyInput={setQtyInput} />
+                        <button
+                          type="button"
+                          onClick={() => removeItem(idx)}
+                          aria-label={`Remover ${item.nome}`}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', padding: 4 }}
+                        >
+                          <Trash2 size={16} />
                         </button>
                       </div>
-                    </td>
-                    <td className="mono">
-                      {formatMoney(item.preco_unitario)}
-                      {item.unidade === 'PESO' ? ' / kg' : ''}
-                    </td>
-                    <td className="mono">{formatMoney(item.subtotal)}</td>
-                    <td>
-                      <button type="button" onClick={() => removeItem(idx)} aria-label={`Remover ${item.nome}`} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}>
-                        <Trash2 size={16} />
-                      </button>
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-            </div>
+              </div>
+              <div className="pdv-items-desktop table-scroll">
+                <table className="pf-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Produto</th>
+                      <th>Qtd</th>
+                      <th>Unitário</th>
+                      <th>Subtotal</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {itens.map((item, idx) => (
+                      <tr key={`${item.produto_id}-${idx}`}>
+                        <td>{idx + 1}</td>
+                        <td>{item.nome}</td>
+                        <td>
+                          <PdvQtyControls item={item} idx={idx} updateQty={updateQty} setQtyInput={setQtyInput} />
+                        </td>
+                        <td className="mono">
+                          {formatMoney(item.preco_unitario)}
+                          {item.unidade === 'PESO' ? ' / kg' : ''}
+                        </td>
+                        <td className="mono">{formatMoney(item.subtotal)}</td>
+                        <td>
+                          <button type="button" onClick={() => removeItem(idx)} aria-label={`Remover ${item.nome}`} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}>
+                            <Trash2 size={16} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </div>
 
-        <div className="pf-card pdv-sidebar" style={{ padding: 24 }}>
+        <div className="pf-card pdv-card pdv-sidebar">
           <h2 className="pf-h2" style={{ marginBottom: 16 }}>Total da venda</h2>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 15 }}>
             <span>Itens ({itens.length})</span>
@@ -536,6 +551,6 @@ export default function Pdv() {
           </button>
         </div>
       </div>
-    </>
+    </div>
   )
 }
